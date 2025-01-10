@@ -6,6 +6,9 @@ import { Button } from "./ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { BaseFormField } from "@/utils/base-form";
 import { register } from "@/services/register-service";
+import { useState } from "react";
+import { IoEyeOff } from "react-icons/io5";
+import { IoEye } from "react-icons/io5";
 
 const formSchema = z.object({
   username: z.string().min(3),
@@ -15,6 +18,9 @@ const formSchema = z.object({
 
 export function RegisterForm() {
   const navFunction = useNavigate();
+  const [isPending, setIsPending] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -24,7 +30,10 @@ export function RegisterForm() {
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    register(values, navFunction);
+    setIsPending(true);
+    register(values, navFunction).finally(() => {
+      setIsPending(false);
+    });
   };
 
   return (
@@ -44,20 +53,30 @@ export function RegisterForm() {
           formControl={form.control}
         />
 
-        <BaseFormField
-          name="password"
-          label="Password"
-          placeholder="Enter your password"
-          formControl={form.control}
-          inputType="password"
-        />
+        <div className="flex flex-col space-y-2">
+          <BaseFormField
+            name="password"
+            label="Password"
+            placeholder="Enter your password"
+            formControl={form.control}
+            inputType={showPassword ? "text" : "password"}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="self-start text-zinc-400"
+          >
+            {showPassword ? <IoEyeOff /> : <IoEye />}
+          </button>
+        </div>
 
         <Button
-          className="w-full font-semibold"
+          className="flex w-full items-center justify-center font-semibold"
           variant={"secondary"}
           type="submit"
+          disabled={isPending}
         >
-          Register
+          {isPending ? "Registering..." : "Register"}
         </Button>
 
         <span className="block text-sm text-zinc-300">

@@ -11,6 +11,7 @@ import com.example.twitter_clone.repositories.RoleRepository;
 import com.example.twitter_clone.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -21,10 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
 import java.time.Instant;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,7 +46,7 @@ public class UserService {
         var role = roleRepository.findByName(Role.RoleName.USER.name());
 
         if(userRepository.findByUsername(user.username()).isPresent()) {
-            throw new RuntimeException("Username already exists");
+            throw new DataIntegrityViolationException("User already registered!");
         }
 
         var newUser = new User();
@@ -61,16 +59,16 @@ public class UserService {
 
     }
 
-    public LoginResponseDTO login(LoginRequestDTO user) throws RuntimeException {
+    public LoginResponseDTO login(LoginRequestDTO user) throws Exception {
 
         var loginUser = userRepository.findByUsername(user.username());
 
         if (loginUser.isEmpty()) {
-            throw new RuntimeException("Invalid credentials");
+            throw new Exception("Invalid credentials");
         }
 
         if (!passwordEncoder.matches(user.password(), loginUser.get().getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+            throw new Exception("Invalid credentials");
         }
 
         var instant = Instant.now();
@@ -93,14 +91,16 @@ public class UserService {
 
     }
 
-    public List<User> listUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> listUsers() {
+        return userRepository.findAll().stream().map(
+                user -> new UserDTO(user.getUsername(), user.getEmail(), user.getPassword())
+        ).toList();
     }
 
 
     public List<TweetResponseDTO> listLikedTweets(JwtAuthenticationToken token) throws AccessDeniedException {
         var user = userRepository.findById(UUID.fromString(token.getName()))
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .orElseThrow(NoSuchElementException::new);
 
         return user.getLikedTweets().stream()
                 .map(tweet -> new TweetResponseDTO(tweet.getId(), tweet.getContent(), tweet.getUser().getUsername() ,tweet.getLikes()))

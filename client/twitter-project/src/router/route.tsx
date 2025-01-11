@@ -1,4 +1,6 @@
 import App from "@/App";
+import { ProtectedRoute } from "@/components/protected-route";
+import Home from "@/pages/home";
 import Login from "@/pages/login";
 import Register from "@/pages/register";
 import { createBrowserRouter, Navigate } from "react-router-dom";
@@ -10,7 +12,7 @@ const routes = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/login" replace />,
+        element: <Navigate to="/home" replace />,
       },
       {
         path: "/login",
@@ -21,10 +23,21 @@ const routes = createBrowserRouter([
         element: <Register />,
       },
 
-      // {
-      //      path: "/home",
-      //      element: <Home />,
-      // },
+      {
+        path: "/home",
+        element: (
+          <ProtectedRoute
+            isAuthenticated={!!localStorage.getItem("token")}
+            authenticationPath="/login"
+          />
+        ),
+        children: [
+          {
+            index: true,
+            element: <Home />,
+          },
+        ],
+      },
     ],
   },
 ]);

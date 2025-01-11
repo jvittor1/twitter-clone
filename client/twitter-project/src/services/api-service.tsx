@@ -5,6 +5,7 @@ interface ApiServiceProps extends RequestInit {
   action: string;
   body?: any;
   auth?: boolean;
+  customToken?: string;
   showToast?: boolean;
   customEndpoint?: string;
 }
@@ -13,11 +14,12 @@ export async function ApiService<T>({
   action,
   body,
   auth,
+  customToken,
   showToast,
   ...props
 }: ApiServiceProps): Promise<BaseResponse<T>> {
   const baseUrl = import.meta.env.VITE_BASE_URL;
-  const token = localStorage.getItem("token") || "";
+  const token = customToken ? customToken : localStorage.getItem("token");
 
   const headers = new Headers();
   headers.append("Content-Type", "application/json");

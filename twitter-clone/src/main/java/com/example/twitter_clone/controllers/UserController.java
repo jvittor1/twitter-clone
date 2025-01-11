@@ -1,15 +1,26 @@
 package com.example.twitter_clone.controllers;
 
 
-import com.example.twitter_clone.dtos.*;
-import com.example.twitter_clone.services.UserService;
+import java.nio.file.AccessDeniedException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.nio.file.AccessDeniedException;
-import java.util.List;
+import com.example.twitter_clone.dtos.BaseResponseDTO;
+import com.example.twitter_clone.dtos.LoginRequestDTO;
+import com.example.twitter_clone.dtos.LoginResponseDTO;
+import com.example.twitter_clone.dtos.TweetResponseDTO;
+import com.example.twitter_clone.dtos.UserDTO;
+import com.example.twitter_clone.dtos.UserResponseDTO;
+import com.example.twitter_clone.services.UserService;
+
+
 
 @RestController
 public class UserController {
@@ -24,6 +35,14 @@ public class UserController {
     }
 
 
+   @GetMapping("/user")
+   public BaseResponseDTO<UserResponseDTO> getUserByToken(JwtAuthenticationToken token) {
+     return new BaseResponseDTO<>(userService.getUserData(token), null, 200);
+     
+   }
+   
+
+
     @PostMapping("/register")
     public BaseResponseDTO<Void> register(@RequestBody UserDTO user) {
         userService.createUser(user);
@@ -33,7 +52,7 @@ public class UserController {
 
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public BaseResponseDTO<List<UserDTO>> listUsers(){
+    public BaseResponseDTO<List<UserResponseDTO>> listUsers(){
         return new BaseResponseDTO<>(userService.listUsers(), null, 200);
     }
 

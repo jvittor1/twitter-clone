@@ -1,15 +1,13 @@
 package com.example.twitter_clone.services;
 
-import com.example.twitter_clone.dtos.LoginRequestDTO;
-import com.example.twitter_clone.dtos.LoginResponseDTO;
-import com.example.twitter_clone.dtos.TweetResponseDTO;
-import com.example.twitter_clone.dtos.UserDTO;
-import com.example.twitter_clone.entities.Role;
-import com.example.twitter_clone.entities.Tweet;
-import com.example.twitter_clone.entities.User;
-import com.example.twitter_clone.repositories.RoleRepository;
-import com.example.twitter_clone.repositories.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
+import java.nio.file.AccessDeniedException;
+import java.time.Instant;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,10 +18,17 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.AccessDeniedException;
-import java.time.Instant;
-import java.util.*;
-import java.util.stream.Collectors;
+import com.example.twitter_clone.dtos.LoginRequestDTO;
+import com.example.twitter_clone.dtos.LoginResponseDTO;
+import com.example.twitter_clone.dtos.TweetResponseDTO;
+import com.example.twitter_clone.dtos.UserDTO;
+import com.example.twitter_clone.dtos.UserResponseDTO;
+import com.example.twitter_clone.entities.Role;
+import com.example.twitter_clone.entities.User;
+import com.example.twitter_clone.repositories.RoleRepository;
+import com.example.twitter_clone.repositories.UserRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService {
@@ -91,9 +96,9 @@ public class UserService {
 
     }
 
-    public List<UserDTO> listUsers() {
+    public List<UserResponseDTO> listUsers() {
         return userRepository.findAll().stream().map(
-                user -> new UserDTO(user.getUsername(), user.getEmail(), user.getPassword())
+                user -> new UserResponseDTO(user.getUsername(), user.getEmail())
         ).toList();
     }
 
@@ -107,4 +112,12 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+
+
+    public UserResponseDTO getUserData(JwtAuthenticationToken token) {
+        var user = userRepository.findById(UUID.fromString(token.getName()))
+                .orElseThrow(EntityNotFoundException::new);
+
+        return new UserResponseDTO(user.getUsername(), user.getEmail());
+    }
 }

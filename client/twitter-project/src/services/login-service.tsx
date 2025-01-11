@@ -1,32 +1,37 @@
+import { toast } from "@/hooks/use-toast";
 import { LoginRequest } from "@/models/login-request";
 import axios from "axios";
 import { NavigateFunction } from "react-router-dom";
-
-interface LoginResponse {
-  expiresAt: number;
-  token: string;
-}
-
 export const login = async (
   { username, password }: LoginRequest,
   navFunction: NavigateFunction,
-): Promise<LoginResponse | null> => {
+) => {
   const baseUrl = import.meta.env.VITE_BASE_URL;
+
   try {
     console.log(
       `Logging in with username: ${username} and password: ${password}`,
     );
 
     const res = await axios.post(baseUrl + "/login", { username, password });
-    if (res.status !== 200) {
-      return null;
-    }
+    toast({
+      title: "Login Successful",
+      description: res.data.message,
+      variant: "success",
+    });
+
     navFunction("/home");
-    setToken(res.data.token);
-    return res.data;
-  } catch (error) {
-    console.error("Login failed", error);
-    return null;
+    setToken(res.data.data.token);
+    return;
+  } catch (error: any) {
+    toast({
+      title: "Login Failed",
+      description: error.response
+        ? error.response.data.message
+        : "An unexpected error occurred. Please try again later.",
+      variant: "destructive",
+    });
+    return;
   }
 };
 

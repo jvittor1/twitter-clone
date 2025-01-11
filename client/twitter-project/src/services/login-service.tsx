@@ -1,12 +1,7 @@
-import { LoginRequest } from "@/models/login-request";
+import { LoginRequest, LoginResponse } from "@/models/login-model";
 import { NavigateFunction } from "react-router-dom";
 import { ApiService } from "./api-service";
 import { HttpMethod } from "@/enums/http-methods";
-
-interface LoginResponse {
-  token: string;
-  expiredAt: string;
-}
 
 export const login = async (
   { username, password }: LoginRequest,
@@ -22,6 +17,8 @@ export const login = async (
   if (response.status === 200) {
     setToken(response.data!.token);
     navFunction("/home");
+
+    console.log("foi pro home teoricamente");
     return;
   }
 };

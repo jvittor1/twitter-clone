@@ -35,9 +35,9 @@ public class User {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "tb_user_followers",
+            name = "tb_user_liked_tweets",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "follower_id")
+            inverseJoinColumns = @JoinColumn(name = "tweet_id")
     )
     private Set<Tweet> likedTweets;
 

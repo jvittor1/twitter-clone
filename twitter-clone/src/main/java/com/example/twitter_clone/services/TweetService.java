@@ -64,7 +64,9 @@ public class TweetService {
                           tweet.getId(),
                           tweet.getContent(),
                           tweet.getUser().getUsername(),
-                          tweet.getLikes()
+                          tweet.getUser().getEmail(),
+                          tweet.getLikes(),
+                          tweet.getCreatedAt().toString()
                ));
 
        return new FeedDTO(tweets.getContent(), page, size, tweets.getTotalPages(), (int) tweets.getTotalElements());
@@ -98,11 +100,12 @@ public class TweetService {
         var user = userRepository.findById(UUID.fromString(token.getName()))
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        if (user.getLikedTweets().contains(tweet)) {
-            user.getLikedTweets().remove(tweet);
-            userRepository.save(user);
+        if (!user.getLikedTweets().contains(tweet)) {
+            return;
         }
-
+        
+        user.getLikedTweets().remove(tweet);
+        userRepository.save(user);
         tweet.setLikes(tweet.getLikes() - 1);
 
         tweetRepository.save(tweet);

@@ -1,5 +1,5 @@
-import BaseComponent from "@/components/base";
-import { LoginForm } from "@/components/login-form";
+import BaseComponent from "@/components/base-component";
+import { LoginForm } from "@/components/login-form-component";
 
 interface LoginProps {}
 export default function Login(_props: LoginProps) {

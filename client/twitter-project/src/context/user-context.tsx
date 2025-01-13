@@ -26,11 +26,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token && user === null) {
+    if (token) {
       getUserData(token).then((user) => {
-        if (user !== undefined) {
-          setUser(user);
-        }
+        if (user !== undefined) setUser(user);
       });
     }
   }, []);

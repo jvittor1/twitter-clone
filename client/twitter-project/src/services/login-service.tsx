@@ -18,7 +18,6 @@ export const login = async (
     setToken(response.data!.token);
     navFunction("/home");
 
-    console.log("foi pro home teoricamente");
     return;
   }
 };

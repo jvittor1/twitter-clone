@@ -15,6 +15,7 @@ import com.example.twitter_clone.dtos.FeedItemDTO;
 import com.example.twitter_clone.dtos.TweetDTO;
 import com.example.twitter_clone.entities.Role;
 import com.example.twitter_clone.entities.Tweet;
+import com.example.twitter_clone.entities.User;
 import com.example.twitter_clone.repositories.TweetRepository;
 import com.example.twitter_clone.repositories.UserRepository;
 
@@ -54,6 +55,14 @@ public class TweetService {
 
         if (!isOwner && !isAdmin) {
             throw new AccessDeniedException("User not authorized to delete tweet");
+        }
+
+
+        for(User db_user: userRepository.findAll()){
+            if(db_user.getLikedTweets().contains(tweet)){
+                db_user.getLikedTweets().remove(tweet);
+                userRepository.save(db_user);
+            }
         }
 
         tweetRepository.delete(tweet);

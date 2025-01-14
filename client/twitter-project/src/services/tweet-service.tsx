@@ -28,7 +28,7 @@ export async function createTweet(
   content: string,
   loadTweets: () => void,
 ) {
-  const response = await ApiService<Tweet>({
+  const response = await ApiService<null>({
     action: "tweet",
     method: HttpMethod.POST,
     auth: true,
@@ -40,8 +40,24 @@ export async function createTweet(
   return true;
 }
 
+export async function deleteTweet(
+  token: string,
+  tweetId: number,
+  loadTweets: () => void,
+) {
+  const response = await ApiService<null>({
+    action: `tweet/${tweetId}`,
+    method: HttpMethod.DELETE,
+    auth: true,
+    customToken: token,
+  });
+  if (response.status !== 200) return false;
+  loadTweets();
+  return true;
+}
+
 export async function likeTweet(token: string, tweetId: number) {
-  const response = await ApiService<Tweet>({
+  const response = await ApiService<null>({
     action: `tweet/${tweetId}/like`,
     method: HttpMethod.POST,
     auth: true,
@@ -52,7 +68,7 @@ export async function likeTweet(token: string, tweetId: number) {
 }
 
 export async function unlikeTweet(token: string, tweetId: number) {
-  const response = await ApiService<Tweet>({
+  const response = await ApiService<null>({
     action: `tweet/${tweetId}/like`,
     method: HttpMethod.DELETE,
     auth: true,

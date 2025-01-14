@@ -8,7 +8,17 @@ import { useTweet } from "@/context/tweet-context";
 import { Tweet } from "@/models/tweet-model";
 import { useUser } from "@/context/user-context";
 import { LikedTweets } from "@/models/user";
-import { likeTweet, unlikeTweet } from "@/services/tweet-service";
+import { deleteTweet, likeTweet, unlikeTweet } from "@/services/tweet-service";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
+
+import { CiMenuKebab } from "react-icons/ci";
+import { Button } from "./ui/button";
+import { FaTrash } from "react-icons/fa6";
 
 interface FeedItemComponentProps {
   id: number;
@@ -25,6 +35,19 @@ function FeedComponentItem({
   timeAgo,
   content,
 }: FeedItemComponentProps) {
+  const { user } = useUser();
+  const { loadTweets } = useTweet();
+  const isOwner = user?.username === username;
+
+  const handleDelete = () => {
+    const token = localStorage.getItem("token") || "";
+    try {
+      deleteTweet(token, id, loadTweets);
+    } catch (error) {
+      console.error("Delete tweet error: ", error);
+    }
+  };
+
   return (
     <div className="flex items-start justify-between space-x-3 border-b border-zinc-700 px-2 py-2">
       <Avatar className="h-10 w-10">
@@ -37,6 +60,26 @@ function FeedComponentItem({
           <p className="text-md text-zinc-700">{email}</p>
           <p className="text-md text-zinc-700">·</p>
           <p className="text-md text-zinc-700">{timeAgo}</p>
+
+          {isOwner && (
+            <div className="text-md flex flex-1 items-center justify-end text-zinc-700">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent">
+                    <CiMenuKebab className="cursor-pointer text-lg text-zinc-300" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem
+                    onClick={handleDelete}
+                    className="flex cursor-pointer items-center rounded-md border border-zinc-600 bg-zinc-800 px-3 py-1 text-zinc-400 transition-colors duration-150 ease-in-out hover:bg-zinc-600 hover:text-white"
+                  >
+                    <FaTrash className="mr-1 inline-block" /> Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
         </div>
 
         <p className="text-md text-white">{content}</p>

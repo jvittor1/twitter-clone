@@ -9,6 +9,8 @@ import { login } from "@/services/login-service";
 import { useState } from "react";
 import { IoEyeOff } from "react-icons/io5";
 import { IoEye } from "react-icons/io5";
+import { useUser } from "@/context/user-context";
+import { useTweet } from "@/context/tweet-context";
 
 const formSchema = z.object({
   username: z.string().min(3),
@@ -16,6 +18,8 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
+  const { loadUser } = useUser();
+  const { loadTweets } = useTweet();
   const navFunction = useNavigate();
   const [isPending, setIsPending] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -30,7 +34,7 @@ export function LoginForm() {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     setIsPending(true);
-    login(values, navFunction).finally(() => {
+    login(values, navFunction, loadUser, loadTweets).finally(() => {
       setIsPending(false);
     });
   };

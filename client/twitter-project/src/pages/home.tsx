@@ -14,17 +14,15 @@ import { logout } from "@/services/login-service";
 import { useNavigate } from "react-router-dom";
 
 export default function Home() {
-  const { user, setUser } = useUser();
+  const { setUser, isLoading } = useUser();
   const { setTweet } = useTweet();
   const navFunction = useNavigate();
 
   const logoutHandler = () => {
-    setUser(null);
-    setTweet(null);
-    logout(navFunction);
+    logout(navFunction, setUser, setTweet);
   };
 
-  if (!user) {
+  if (isLoading) {
     return (
       <div className="flex h-screen w-full items-center justify-center text-xl font-semibold text-zinc-400">
         Loading...

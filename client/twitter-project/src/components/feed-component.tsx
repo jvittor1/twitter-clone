@@ -134,9 +134,16 @@ function FeedButtonComponent({ tweetId }: { tweetId: number }) {
 }
 
 export default function FeedComponent() {
-  const { tweet } = useTweet();
+  const { tweet, isLoading } = useTweet();
+  if (isLoading || !tweet) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center text-xl font-semibold text-zinc-400">
+        Loading...
+      </div>
+    );
+  }
 
-  if (!tweet) {
+  if (tweet.length === 0) {
     return (
       <div className="flex h-screen w-full items-center justify-center text-xl font-semibold text-zinc-400">
         No tweets found.

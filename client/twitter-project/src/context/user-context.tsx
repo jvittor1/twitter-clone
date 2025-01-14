@@ -5,6 +5,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 type UserContextType = {
   user: any;
   setUser: (user: any) => void;
+  loadUser: () => void;
+  isLoading: boolean;
 };
 
 interface UserProviderProps {
@@ -23,18 +25,32 @@ export const useUser = () => {
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+  const loadUser = () => {
     const token = localStorage.getItem("token");
     if (token) {
-      getUserData(token).then((user) => {
-        if (user !== undefined) setUser(user);
-      });
+      try {
+        getUserData(token).then((user) => {
+          if (user !== undefined) {
+            setUser(user);
+          }
+        });
+      } catch (error) {
+        console.error("Get user data error: ", error);
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
     }
+  };
+
+  useEffect(() => {
+    loadUser();
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, loadUser, isLoading }}>
       {children}
     </UserContext.Provider>
   );

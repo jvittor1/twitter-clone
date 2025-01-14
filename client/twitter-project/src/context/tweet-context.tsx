@@ -7,6 +7,7 @@ type TweetContextType = {
   tweet: any;
   setTweet: (tweet: any) => void;
   loadTweets: () => void;
+  isLoading: boolean;
 };
 
 interface TweetProviderProps {
@@ -25,12 +26,23 @@ export const useTweet = () => {
 
 export const TweetProvider: React.FC<TweetProviderProps> = ({ children }) => {
   const [tweet, setTweet] = useState<Tweet[] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   const loadTweets = () => {
     const token = localStorage.getItem("token");
     if (token) {
-      getFeed(token).then((data) => {
-        if (data !== undefined) setTweet(formatTweet(data));
-      });
+      try {
+        getFeed(token).then((data) => {
+          if (data !== undefined) {
+            setTweet(formatTweet(data));
+          }
+        });
+      } catch (error) {
+        console.error("Get feed error: ", error);
+        setTweet([]);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -39,7 +51,7 @@ export const TweetProvider: React.FC<TweetProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <TweetContext.Provider value={{ tweet, setTweet, loadTweets }}>
+    <TweetContext.Provider value={{ tweet, setTweet, loadTweets, isLoading }}>
       {children}
     </TweetContext.Provider>
   );

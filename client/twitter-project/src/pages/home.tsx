@@ -32,7 +32,7 @@ export default function Home() {
         </Button>
       </aside>
 
-      <main className="flex max-w-[52rem] flex-1 flex-col space-y-3 border-l border-r border-zinc-700 py-4 pb-0 text-white">
+      <main className="flex max-w-[52rem] flex-1 flex-col space-y-3 overflow-y-auto border-l border-r border-zinc-700 py-4 pb-0 text-white">
         <PageTitleComponent title="Home" icon={HiOutlineSparkles} />
 
         <CreateTweetComponent />

@@ -79,7 +79,7 @@ export default function FeedComponent() {
   }
 
   return (
-    <div className="flex flex-col space-y-2 overflow-y-auto">
+    <div className="flex flex-col space-y-2">
       {tweet.map((tweet: Tweet) => (
         <FeedComponentItem
           key={tweet.tweetId}

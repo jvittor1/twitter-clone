@@ -51,7 +51,14 @@ function FeedComponentItem({
   return (
     <div className="flex items-start justify-between space-x-3 border-b border-zinc-700 px-2 py-2">
       <Avatar className="h-10 w-10">
-        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+        <AvatarImage
+          src={
+            username == user.username
+              ? "https://github.com/jvittor1.png"
+              : "https://github.com/shadcn.png"
+          }
+          alt="profile picture"
+        />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
       <div className="flex flex-1 flex-col space-y-3">
@@ -132,7 +139,7 @@ export default function FeedComponent() {
   if (!tweet) {
     return (
       <div className="flex h-screen w-full items-center justify-center text-xl font-semibold text-zinc-400">
-        Loading...
+        No tweets found.
       </div>
     );
   }

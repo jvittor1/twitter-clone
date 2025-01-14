@@ -1,13 +1,8 @@
 package com.example.twitter_clone.services;
 
-import com.example.twitter_clone.dtos.FeedDTO;
-import com.example.twitter_clone.dtos.FeedItemDTO;
-import com.example.twitter_clone.dtos.TweetDTO;
-import com.example.twitter_clone.entities.Role;
-import com.example.twitter_clone.entities.Tweet;
-import com.example.twitter_clone.repositories.TweetRepository;
-import com.example.twitter_clone.repositories.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
+import java.nio.file.AccessDeniedException;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -15,8 +10,15 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.AccessDeniedException;
-import java.util.UUID;
+import com.example.twitter_clone.dtos.FeedDTO;
+import com.example.twitter_clone.dtos.FeedItemDTO;
+import com.example.twitter_clone.dtos.TweetDTO;
+import com.example.twitter_clone.entities.Role;
+import com.example.twitter_clone.entities.Tweet;
+import com.example.twitter_clone.repositories.TweetRepository;
+import com.example.twitter_clone.repositories.UserRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class TweetService {
@@ -85,9 +87,9 @@ public class TweetService {
         if(!user.getLikedTweets().contains(tweet)){
             user.getLikedTweets().add(tweet);
             userRepository.save(user);
+            tweet.setLikes(tweet.getLikes() + 1);
         }
 
-        tweet.setLikes(tweet.getLikes() + 1);
 
         tweetRepository.save(tweet);
     }

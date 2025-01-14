@@ -6,8 +6,12 @@ import { useState } from "react";
 import { IoMdHeart } from "react-icons/io";
 import { useTweet } from "@/context/tweet-context";
 import { Tweet } from "@/models/tweet-model";
+import { useUser } from "@/context/user-context";
+import { LikedTweets } from "@/models/user";
+import { likeTweet, unlikeTweet } from "@/services/tweet-service";
 
 interface FeedItemComponentProps {
+  id: number;
   username: string;
   email: string;
   timeAgo?: string;
@@ -15,6 +19,7 @@ interface FeedItemComponentProps {
 }
 
 function FeedComponentItem({
+  id,
   username,
   email,
   timeAgo,
@@ -35,17 +40,28 @@ function FeedComponentItem({
         </div>
 
         <p className="text-md text-white">{content}</p>
-        <FeedButtonComponent />
+        <FeedButtonComponent tweetId={id} />
       </div>
     </div>
   );
 }
 
-function FeedButtonComponent() {
-  const [isLiked, setIsLiked] = useState(false);
-
+function FeedButtonComponent({ tweetId }: { tweetId: number }) {
+  const { user } = useUser();
+  const [isLiked, setIsLiked] = useState(() =>
+    user?.likedTweets.some((tweet: LikedTweets) => tweet.id === tweetId),
+  );
   const handleLike = () => {
-    setIsLiked(!isLiked);
+    const token = localStorage.getItem("token") || "";
+    if (isLiked) {
+      unlikeTweet(token, tweetId).then((data) => {
+        if (data) setIsLiked(false);
+        return;
+      });
+    }
+    likeTweet(token, tweetId).then((data) => {
+      if (data) setIsLiked(true);
+    });
   };
 
   return (
@@ -83,6 +99,7 @@ export default function FeedComponent() {
       {tweet.map((tweet: Tweet) => (
         <FeedComponentItem
           key={tweet.tweetId}
+          id={tweet.tweetId}
           username={tweet.username}
           email={tweet.email}
           timeAgo={tweet.timeAgo}

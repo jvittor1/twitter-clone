@@ -1,4 +1,6 @@
 package com.example.twitter_clone.dtos;
 
-public record UserResponseDTO(String username, String email) {
+import java.util.List;
+
+public record UserResponseDTO(String username, String email, List<TweetResponseDTO> likedTweets) {
 }

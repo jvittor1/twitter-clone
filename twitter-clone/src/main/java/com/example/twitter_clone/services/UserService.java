@@ -97,9 +97,11 @@ public class UserService {
     }
 
     public List<UserResponseDTO> listUsers() {
-        return userRepository.findAll().stream().map(
-                user -> new UserResponseDTO(user.getUsername(), user.getEmail())
-        ).toList();
+        return userRepository.findAll().stream()
+                .map(user -> new UserResponseDTO(user.getUsername(), user.getEmail(), user.getLikedTweets().stream()
+                        .map(tweet -> new TweetResponseDTO(tweet.getId(), tweet.getContent(), tweet.getUser().getUsername(), tweet.getLikes()))
+                        .collect(Collectors.toList())))
+                .collect(Collectors.toList());
     }
 
 
@@ -115,9 +117,17 @@ public class UserService {
 
 
     public UserResponseDTO getUserData(JwtAuthenticationToken token) {
-        var user = userRepository.findById(UUID.fromString(token.getName()))
+        User user = userRepository.findById(UUID.fromString(token.getName()))
                 .orElseThrow(EntityNotFoundException::new);
 
-        return new UserResponseDTO(user.getUsername(), user.getEmail());
+
+        UserResponseDTO userResponse = new UserResponseDTO(user.getUsername(), user.getEmail(),
+        user.getLikedTweets().stream()
+                .map(tweet -> new TweetResponseDTO(tweet.getId(), tweet.getContent(), tweet.getUser().getUsername(), tweet.getLikes()))
+                .collect(Collectors.toList())
+        
+        );
+
+        return userResponse;
     }
 }

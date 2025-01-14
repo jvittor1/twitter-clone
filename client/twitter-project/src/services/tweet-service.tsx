@@ -39,3 +39,24 @@ export async function createTweet(
   loadTweets();
   return true;
 }
+
+export async function likeTweet(token: string, tweetId: number) {
+  const response = await ApiService<Tweet>({
+    action: `tweet/${tweetId}/like`,
+    method: HttpMethod.POST,
+    auth: true,
+    customToken: token,
+  });
+
+  return response.status === 200;
+}
+
+export async function unlikeTweet(token: string, tweetId: number) {
+  const response = await ApiService<Tweet>({
+    action: `tweet/${tweetId}/like`,
+    method: HttpMethod.DELETE,
+    auth: true,
+    customToken: token,
+  });
+  return response.status === 200;
+}

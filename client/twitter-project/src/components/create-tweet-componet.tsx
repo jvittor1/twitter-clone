@@ -4,8 +4,25 @@ import { Textarea } from "./ui/textarea";
 import { CiTextAlignLeft } from "react-icons/ci";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
 import { Button } from "./ui/button";
+import { TweetDto } from "@/models/tweet-dto";
+import { useState } from "react";
+import { createTweet } from "@/services/tweet-service";
+import { useTweet } from "@/context/tweet-context";
 
 export default function CreateTweetComponent() {
+  const [tweet, setTweet] = useState<TweetDto>({ content: "" });
+  const { loadTweets } = useTweet();
+  const handleTweet = () => {
+    if (tweet.content.length === 0) {
+      return;
+    }
+
+    const token = localStorage.getItem("token") || "";
+    createTweet(token, tweet.content, loadTweets).then((response) => {
+      if (response) setTweet({ content: "" });
+    });
+  };
+
   return (
     <div className="flex w-full justify-between space-x-2 border-b-8 border-t border-zinc-700 p-3">
       <Avatar className="h-10 w-10">
@@ -17,6 +34,8 @@ export default function CreateTweetComponent() {
         <Textarea
           placeholder="What's happening?"
           className="resize-none border-none"
+          onChange={(e) => setTweet({ content: e.target.value })}
+          value={tweet.content}
         />
 
         <div className="flex space-x-4 p-2 text-blue-500">
@@ -28,6 +47,7 @@ export default function CreateTweetComponent() {
 
       <Button
         className="text-md w-20 self-end rounded-full font-bold"
+        onClick={handleTweet}
         variant="secondary"
       >
         Tweet

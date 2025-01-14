@@ -22,3 +22,20 @@ export async function getFeed(token: string) {
     return response.data!.feedItens;
   }
 }
+
+export async function createTweet(
+  token: string,
+  content: string,
+  loadTweets: () => void,
+) {
+  const response = await ApiService<Tweet>({
+    action: "tweet",
+    method: HttpMethod.POST,
+    auth: true,
+    customToken: token,
+    body: { content },
+  });
+  if (response.status !== 200) return false;
+  loadTweets();
+  return true;
+}

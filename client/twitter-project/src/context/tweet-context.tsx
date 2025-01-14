@@ -6,6 +6,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 type TweetContextType = {
   tweet: any;
   setTweet: (tweet: any) => void;
+  loadTweets: () => void;
 };
 
 interface TweetProviderProps {
@@ -24,18 +25,21 @@ export const useTweet = () => {
 
 export const TweetProvider: React.FC<TweetProviderProps> = ({ children }) => {
   const [tweet, setTweet] = useState<Tweet[] | null>(null);
-
-  useEffect(() => {
+  const loadTweets = () => {
     const token = localStorage.getItem("token");
     if (token) {
       getFeed(token).then((data) => {
         if (data !== undefined) setTweet(formatTweet(data));
       });
     }
+  };
+
+  useEffect(() => {
+    loadTweets();
   }, []);
 
   return (
-    <TweetContext.Provider value={{ tweet, setTweet }}>
+    <TweetContext.Provider value={{ tweet, setTweet, loadTweets }}>
       {children}
     </TweetContext.Provider>
   );

@@ -153,14 +153,14 @@ export default function FeedComponent() {
 
   return (
     <div className="flex flex-col space-y-2">
-      {tweet.map((tweet: Tweet) => (
+      {tweet?.map((tweet: Tweet) => (
         <FeedComponentItem
           key={tweet.tweetId}
           id={tweet.tweetId}
-          username={tweet.username}
-          email={tweet.email}
-          timeAgo={tweet.timeAgo}
-          content={tweet.content}
+          username={tweet.username || ""}
+          email={tweet.email || ""}
+          timeAgo={tweet.timeAgo || ""}
+          content={tweet.content || ""}
         />
       ))}
     </div>

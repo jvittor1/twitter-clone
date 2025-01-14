@@ -8,9 +8,21 @@ import { HiOutlineSparkles } from "react-icons/hi";
 import CreateTweetComponent from "@/components/create-tweet-componet";
 import PageTitleComponent from "@/components/page-title-component";
 import FeedComponent from "@/components/feed-component";
+import { Separator } from "@/components/ui/separator";
+import { useTweet } from "@/context/tweet-context";
+import { logout } from "@/services/login-service";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
+  const { setTweet } = useTweet();
+  const navFunction = useNavigate();
+
+  const logoutHandler = () => {
+    setUser(null);
+    setTweet(null);
+    logout(navFunction);
+  };
 
   if (!user) {
     return (
@@ -29,6 +41,14 @@ export default function Home() {
 
         <Button className="w-full rounded-full" variant={"secondary"}>
           Tweet
+        </Button>
+        <Separator orientation="horizontal" className="bg-zinc-700" />
+        <Button
+          className="w-full rounded-full border border-zinc-800 hover:bg-zinc-800"
+          variant={"default"}
+          onClick={logoutHandler}
+        >
+          Logout
         </Button>
       </aside>
 

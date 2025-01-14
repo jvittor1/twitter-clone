@@ -25,13 +25,11 @@ function SideBarItem({
   return (
     <div
       onClick={onClick}
-      className="flex w-full cursor-pointer items-center space-x-4"
+      className={`flex w-full cursor-pointer items-center space-x-4 ${selected ? "text-blue-500" : "text-zinc-500 hover:text-zinc-400"}`}
     >
-      <Icon
-        className={`text-xl ${selected ? "text-blue-500" : "text-zinc-500"}`}
-      />
+      <Icon className="text-xl" />
       <span
-        className={`text-md font-bold ${selected ? "text-blue-500" : "text-zinc-400"} `}
+        className={`text-md font-bold ${selected ? "text-blue-500" : "text-zinc-400 hover:text-zinc-300"} `}
       >
         {text}
       </span>

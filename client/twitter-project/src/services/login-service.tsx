@@ -25,3 +25,8 @@ export const login = async (
 const setToken = (token: string) => {
   localStorage.setItem("token", token);
 };
+
+export const logout = (navFunction: NavigateFunction) => {
+  localStorage.removeItem("token");
+  navFunction("/login");
+};

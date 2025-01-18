@@ -39,7 +39,10 @@ export function RegisterForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-80 space-y-5">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-64 space-y-5 md:w-72 lg:w-80 xl:w-[30rem]"
+      >
         <BaseFormField
           name="username"
           label="Username"

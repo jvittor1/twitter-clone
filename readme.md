@@ -18,6 +18,7 @@ Este é um projeto Fullstack que simula funcionalidades de um sistema semelhante
 - **TypeScript**: Linguagem utilizada para tipagem estática no frontend.
 - **Tailwind CSS e ShadCN**: Estilização otimizada e modular para desenvolvimento rápido.
 - **Autenticação de Rotas**: Proteção das rotas baseada nos tokens JWT fornecidos pelo backend.
+- **Responsividade**: Interface adaptada para diferentes dispositivos, proporcionando uma experiência fluida em desktops, tablets e smartphones.
 
 ### Banco de Dados
 
@@ -63,6 +64,10 @@ Este é um projeto Fullstack que simula funcionalidades de um sistema semelhante
 ### Register
 
 ![Register](./images/register.jpg)
+
+### Login Responsivo
+
+![Login-Responsivo](./images/home-responsive.jpg)
 
 ## Como Executar o Projeto
 

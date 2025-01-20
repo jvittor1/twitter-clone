@@ -76,7 +76,7 @@ Este é um projeto Fullstack que simula funcionalidades de um sistema semelhante
 ### Configuração do Frontend
 
 1. Navegue até a pasta do frontend:
-   `   cd client/twitter-project`
+   `cd client/twitter-project`
 2. Instale as dependências:
    `npm install`
 

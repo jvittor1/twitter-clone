@@ -32,11 +32,19 @@ export function LoginForm() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsPending(true);
-    login(values, navFunction, loadUser, loadTweets).finally(() => {
+    try {
+      const loginSuccessful = await login(values, loadUser, loadTweets);
+
+      if (loginSuccessful) {
+        navFunction("/home");
+      }
+    } catch (error) {
+      console.error("An unexpected error occurred:", error);
+    } finally {
       setIsPending(false);
-    });
+    }
   };
 
   return (

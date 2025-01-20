@@ -27,7 +27,7 @@ const routes = createBrowserRouter([
         path: "/home",
         element: (
           <ProtectedRoute
-            isAuthenticated={!!localStorage.getItem("token")}
+            token={localStorage.getItem("token") || ""}
             authenticationPath="/login"
           />
         ),

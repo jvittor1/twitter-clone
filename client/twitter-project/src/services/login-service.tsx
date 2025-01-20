@@ -7,7 +7,6 @@ import { Tweet } from "@/models/tweet-model";
 
 export const login = async (
   { username, password }: LoginRequest,
-  navFunction: NavigateFunction,
   loadUser: () => void,
   loadTweets: () => void,
 ) => {
@@ -20,11 +19,11 @@ export const login = async (
 
   if (response.status === 200) {
     setToken(response.data!.token);
-    navFunction("/home");
     loadUser();
     loadTweets();
-    return;
+    return true;
   }
+  return false;
 };
 
 const setToken = (token: string) => {

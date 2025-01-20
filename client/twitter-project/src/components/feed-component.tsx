@@ -50,7 +50,7 @@ function FeedComponentItem({
 
   return (
     <div className="flex items-start justify-between space-x-3 border-b border-zinc-700 px-2 py-2">
-      <Avatar className="h-10 w-10">
+      <Avatar className="h-8 w-8 md:h-10 md:w-10">
         <AvatarImage
           src={
             username == user.username
@@ -64,7 +64,9 @@ function FeedComponentItem({
       <div className="flex flex-1 flex-col space-y-3">
         <div className="flex items-center space-x-2">
           <h3 className="text-md font-bold text-white">{username}</h3>
-          <p className="text-md text-zinc-700">{email}</p>
+          <p className="text-md w-24 truncate text-zinc-700 md:w-auto">
+            {email}
+          </p>
           <p className="text-md text-zinc-700">·</p>
           <p className="text-md text-zinc-700">{timeAgo}</p>
 
@@ -89,7 +91,7 @@ function FeedComponentItem({
           )}
         </div>
 
-        <p className="text-md text-white">{content}</p>
+        <p className="md:text-md text-base text-white">{content}</p>
         <FeedButtonComponent tweetId={id} />
       </div>
     </div>
@@ -115,7 +117,7 @@ function FeedButtonComponent({ tweetId }: { tweetId: number }) {
   };
 
   return (
-    <div className="flex w-full items-center justify-around text-zinc-700">
+    <div className="flex w-full items-center justify-between text-zinc-700 md:justify-around">
       <IoChatbubble className="cursor-pointer text-xl transition-colors duration-150 ease-in-out hover:text-zinc-400" />
       <BiRepost className="cursor-pointer text-2xl transition-colors duration-150 ease-in-out hover:text-green-600" />
       {isLiked ? (

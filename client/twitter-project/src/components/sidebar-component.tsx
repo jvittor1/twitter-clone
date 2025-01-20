@@ -8,6 +8,10 @@ import { FaBookmark } from "react-icons/fa";
 import { CiViewList } from "react-icons/ci";
 import { FaUserCircle } from "react-icons/fa";
 import { CiCircleMore } from "react-icons/ci";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { Button } from "./ui/button";
+import { IoMenu } from "react-icons/io5";
+import SideBarButtonsComponent from "./sidebar-buttons-component";
 
 interface SideBarItemProps {
   icon: IconType;
@@ -90,6 +94,24 @@ export function SideBarComponent() {
         icon={CiCircleMore}
         text="More"
       />
+    </div>
+  );
+}
+
+export function SideBarResponsiveComponent() {
+  return (
+    <div>
+      <Sheet>
+        <SheetTrigger>
+          <Button variant="default" className="w-10 rounded-full">
+            <IoMenu className="text-xl text-zinc-400" />
+          </Button>
+        </SheetTrigger>
+        <SheetContent className="w-64 space-y-6 border-zinc-700 bg-zinc-950 py-4">
+          <SideBarComponent />
+          <SideBarButtonsComponent />
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
